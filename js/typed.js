@@ -195,7 +195,8 @@
                         tag += endTag;
                     }
                 }
-
+                 /* call before functions if applicable */
+                 
                 // timeout for any pause after a character
                 self.timeout = setTimeout(function() {
                     if (curStrPos === curString.length) {
@@ -218,11 +219,7 @@
                             self.backspace(curString, curStrPos);
                         }, self.backDelay);
                     } else {
-
-                        /* call before functions if applicable */
-                        if (curStrPos === 0)
-                            self.options.preStringTyped(self.arrayPos);
-
+                    
                         // start typing each new char into existing string
                         // curString: arg, self.el.html: original text inside element
                         var nextString = curString.substr(0, curStrPos + 1);
@@ -253,6 +250,12 @@
 
         ,
         backspace: function(curString, curStrPos) {
+            // fix
+            if(typeof this.options.backDelete !== 'undefined' && !this.options.backDelete) {
+                // delete text directly 
+                curStrPos = 0;
+            }
+        
             // exit when stopped
             if (this.stop === true) {
                 return;
@@ -318,16 +321,20 @@
                 // array position to next string
                 else if (curStrPos <= self.stopNum) {
                     self.arrayPos++;
-
                     if (self.arrayPos === self.strings.length) {
                         self.arrayPos = 0;
-
+                        // fix
+                        self.options.preStringTyped(self.arrayPos);
                         // Shuffle sequence again
                         if(self.shuffle) self.sequence = self.shuffleArray(self.sequence);
 
                         self.init();
-                    } else
+                    } else {
+                        //fix
+                        self.options.preStringTyped(self.arrayPos);
                         self.typewrite(self.strings[self.sequence[self.arrayPos]], curStrPos);
+                     }
+                     
                 }
 
                 // humanized value for typing
