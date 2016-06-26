@@ -1,3 +1,8 @@
+This is a fork of Typed.js
+---
+*This fork contains a fix for preStringTyped event which was not always fired 
+*An option "backDelete" has been added to disable the back typing effect
+
 Typed.js
 ========
 
